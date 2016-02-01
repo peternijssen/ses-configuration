@@ -1,6 +1,7 @@
 <?php
 
 namespace PeterNijssen\Ses\Manager;
+
 use PeterNijssen\Ses\Model\Dns;
 
 /**

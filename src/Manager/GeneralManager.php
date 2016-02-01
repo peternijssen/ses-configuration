@@ -123,7 +123,8 @@ class GeneralManager
     /**
      * Request AWS to enable DKIM
      */
-    public function enableDkim() {
+    public function enableDkim()
+    {
         $this->sesClient->setIdentityDkimEnabled(
             [
                 'DkimEnabled' => true,
@@ -135,7 +136,8 @@ class GeneralManager
     /**
      * Request AWS To disable DKIM
      */
-    public function disableDkim() {
+    public function disableDkim()
+    {
         $this->sesClient->setIdentityDkimEnabled(
             [
                 'DkimEnabled' => false,

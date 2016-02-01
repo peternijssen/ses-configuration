@@ -63,7 +63,7 @@ class SesIdentity
      */
     public function getDomain()
     {
-        if(preg_match("/@([^\s]+)/iu", $this->identity, $info)) {
+        if (preg_match("/@([^\s]+)/iu", $this->identity, $info)) {
             return $info[1];
         }
 
