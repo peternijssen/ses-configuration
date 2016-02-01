@@ -1,0 +1,35 @@
+{
+    "name": "peternijssen/ses-configuration",
+    "license": "MIT",
+    "type": "library",
+    "description": "Package to manage SES configuration. It does not send actual emails!",
+    "keywords": [
+        "ses",
+        "aws",
+        "configuration"
+    ],
+    "authors": [
+        {
+            "name": "Peter Nijssen",
+            "homepage": "https://www.peternijssen.nl"
+        }
+    ],
+    "require": {
+        "php": ">=5.5",
+        "aws/aws-sdk-php" : "~3.14"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.8",
+        "squizlabs/php_codesniffer": "~2.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "PeterNijssen\\Ses": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PeterNijssen\\Ses\\Tests\\": "tests/"
+        }
+    }
+}
