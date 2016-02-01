@@ -28,4 +28,31 @@ class SesIdentityTest extends \PHPUnit_Framework_TestCase
             }
         }
     }
+
+    public function testGetIdentity()
+    {
+        $sesIdentity = new SesIdentity("test@test.com");
+        $this->assertEquals("test@test.com", $sesIdentity->getIdentity());
+
+        $sesIdentity = new SesIdentity("test.com");
+        $this->assertEquals("test.com", $sesIdentity->getIdentity());
+    }
+
+    public function testGetDomain()
+    {
+        $sesIdentity = new SesIdentity("test@test.com");
+        $this->assertEquals("test.com", $sesIdentity->getDomain());
+
+        $sesIdentity = new SesIdentity("test.com");
+        $this->assertEquals("test.com", $sesIdentity->getDomain());
+    }
+
+    public function testGetType()
+    {
+        $sesIdentity = new SesIdentity("test@test.com");
+        $this->assertEquals("email", $sesIdentity->getType());
+
+        $sesIdentity = new SesIdentity("test.com");
+        $this->assertEquals("domain", $sesIdentity->getType());
+    }
 }
