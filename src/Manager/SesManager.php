@@ -5,12 +5,12 @@ namespace PeterNijssen\Ses\Manager;
 use Aws\Ses\SesClient;
 use PeterNijssen\Ses\Exception\InvalidFetchStatusException;
 use PeterNijssen\Ses\Model\Dns;
-use PeterNijssen\Ses\Model\SesIdentity;
+use PeterNijssen\Ses\Model\IdentityInterface;
 
 /**
  * This service manages AWS SES
  */
-class GeneralManager
+abstract class SesManager
 {
     /**
      * @var SesClient
@@ -18,19 +18,20 @@ class GeneralManager
     protected $sesClient;
 
     /**
-     * @var SesIdentity
+     * @var IdentityInterface
      */
-    protected $sesIdentity;
+    protected $identity;
 
     /**
      * Constructor
      *
-     * @param SesClient $sesClient
+     * @param SesClient         $sesClient
+     * @param IdentityInterface $identity
      */
-    public function __construct(SesClient $sesClient, SesIdentity $sesIdentity)
+    public function __construct(SesClient $sesClient, IdentityInterface $identity)
     {
         $this->sesClient = $sesClient;
-        $this->sesIdentity = $sesIdentity;
+        $this->identity = $identity;
     }
 
     /**
@@ -44,7 +45,7 @@ class GeneralManager
     {
         $result = $this->sesClient->getIdentityVerificationAttributes(
             [
-                'Identities' => [$this->sesIdentity->getIdentity()],
+                'Identities' => [$this->identity->getIdentity()],
             ]
         );
 
@@ -68,7 +69,7 @@ class GeneralManager
     {
         $result = $this->sesClient->getIdentityDkimAttributes(
             [
-                'Identities' => [$this->sesIdentity->getIdentity()],
+                'Identities' => [$this->identity->getIdentity()],
             ]
         );
 
@@ -90,7 +91,7 @@ class GeneralManager
     {
         $result = $this->sesClient->getIdentityDkimAttributes(
             [
-                'Identities' => [$this->sesIdentity->getIdentity()],
+                'Identities' => [$this->identity->getIdentity()],
             ]
         );
 
@@ -98,7 +99,7 @@ class GeneralManager
         $results = $result->search("DkimAttributes.*.DkimTokens");
         if (is_array($results)) {
             foreach (current($results) as $result) {
-                $name = $result."._domainkey.".$this->sesIdentity->getDomain();
+                $name = $result."._domainkey.".$this->identity->getDomain();
                 $value = $result.".dkim.amazonses.com";
 
                 $records[] = new Dns("CNAME", $name, $value);
@@ -115,34 +116,50 @@ class GeneralManager
     {
         $this->sesClient->verifyDomainDkim(
             [
-                'Domain' => $this->sesIdentity->getDomain(),
+                'Domain' => $this->identity->getDomain(),
             ]
         );
     }
 
     /**
      * Request AWS to enable DKIM
+     *
+     * @return bool
      */
     public function enableDkim()
     {
-        $this->sesClient->setIdentityDkimEnabled(
-            [
-                'DkimEnabled' => true,
-                'Identity' => $this->sesIdentity->getIdentity(),
-            ]
-        );
+        try {
+            $this->sesClient->setIdentityDkimEnabled(
+                [
+                    'DkimEnabled' => true,
+                    'Identity' => $this->identity->getIdentity(),
+                ]
+            );
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
      * Request AWS To disable DKIM
+     *
+     * @return bool
      */
     public function disableDkim()
     {
-        $this->sesClient->setIdentityDkimEnabled(
-            [
-                'DkimEnabled' => false,
-                'Identity' => $this->sesIdentity->getIdentity(),
-            ]
-        );
+        try {
+            $this->sesClient->setIdentityDkimEnabled(
+                [
+                    'DkimEnabled' => false,
+                    'Identity' => $this->identity->getIdentity(),
+                ]
+            );
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }

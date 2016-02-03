@@ -1,12 +1,25 @@
 <?php
 
 namespace PeterNijssen\Ses\Manager;
+use Aws\Ses\SesClient;
+use PeterNijssen\Ses\Model\EmailIdentity;
 
 /**
  * This manager handles email identities
  */
-class EmailManager extends GeneralManager implements ManagerInterface
+class EmailManager extends SesManager
 {
+    /**
+     * Constructor
+     *
+     * @param SesClient     $sesClient
+     * @param EmailIdentity $identity
+     */
+    public function __construct(SesClient $sesClient, EmailIdentity $identity)
+    {
+        parent::__construct($sesClient, $identity);
+    }
+
     /**
      * Create the identity within SES
      */
@@ -14,7 +27,7 @@ class EmailManager extends GeneralManager implements ManagerInterface
     {
         $this->sesClient->verifyEmailIdentity(
             [
-                'EmailAddress' => $this->sesIdentity->getIdentity(),
+                'EmailAddress' => $this->identity->getIdentity(),
             ]
         );
     }
