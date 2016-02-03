@@ -1,6 +1,7 @@
 <?php
 
 namespace PeterNijssen\Ses\Model;
+
 use PeterNijssen\Ses\Exception\InvalidIdentityException;
 
 /**
@@ -36,4 +37,3 @@ class EmailIdentity extends SesIdentity implements IdentityInterface
         }
     }
 }
-

@@ -1,6 +1,7 @@
 <?php
 
 namespace PeterNijssen\Ses\Manager;
+
 use Aws\Ses\SesClient;
 use PeterNijssen\Ses\Model\EmailIdentity;
 
